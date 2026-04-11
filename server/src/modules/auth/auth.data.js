@@ -4,6 +4,10 @@ export const findUserByEmail = async (email) => {
   return await UserModel.findOne({ email });
 };
 
+export const findUserById = async (id) => {
+  return await UserModel.findById(id);
+};
+
 export const createUser = async (data) => {
   const user = await UserModel.create(data);
   return user;

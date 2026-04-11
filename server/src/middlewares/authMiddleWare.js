@@ -10,7 +10,7 @@ const authMiddlewareJWT = (allowedRoles = []) => {
         return next(new AppError("Token not found", 401));
       }
 
-      const token = authHeader.startsWith("Bearer")
+      const token = authHeader.startsWith("Bearer ")
         ? authHeader.split(" ")[1]
         : authHeader;
 
@@ -39,4 +39,5 @@ const authMiddlewareJWT = (allowedRoles = []) => {
   };
 };
 
+export const protect = authMiddlewareJWT();
 export default authMiddlewareJWT;

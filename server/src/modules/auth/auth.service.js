@@ -8,27 +8,20 @@ import  ROLES  from "../../../database/roles.js";
 import { registrationTemplate } from "../../utils/email/emailTemplate.js";
 
 
-export const register = async ({ userName, email, password, role=ROLES.USER }) => {
+export const register = async ({ firstName, lastName, email, password, role=ROLES.USER }) => {
   const userExists = await authQuery.findUserByEmail(email);
   if (userExists) {
     throw new AppError("User already exists", 409);
   }
 
+  const userName = `${firstName} ${lastName}`;
   const hashedPassword = await hashing.hash(password);
-  const code = generateCode();
-
-  await sendEmail({
-    to: email,
-    subject: "Confirm Registration",
-    html: registrationTemplate(userName, code),
-  });
 
   const newUser = await authQuery.createUser({
     userName,
     email,
     password: hashedPassword,
-    code,
-    isConfirmed: false,
+    confirmEmail: true,
     role,
   });
   return newUser;
