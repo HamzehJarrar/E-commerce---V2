@@ -1,11 +1,14 @@
-import { Box } from '@mui/material'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+
 function App() {
-  
   return (
-    <Box>
-        <h1>App</h1>
-    </Box>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
