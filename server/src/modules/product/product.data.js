@@ -7,7 +7,6 @@ import productModel from "../../../database/models/product.model.js";
 export const getAll = async (limit, skip) => {
   const products = await productModel
     .find()
-    .select("name price finalPrice discount attributes subimages mainImage ")
     .populate("category", "name -_id")
     .skip(skip)
     .limit(limit);

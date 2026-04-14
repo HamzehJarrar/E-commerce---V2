@@ -1,9 +1,12 @@
-function Home() {
+import { Box, Container } from "@mui/material";
+import Products from "../products/products";
+
+export default function Home() {
   return (
-    <div style={{ padding: "2rem", textAlign: "center" }}>
-      <h1>Welcome to E-Commerce</h1>
-    </div>
+    <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", bgcolor: "#fff" }}>
+      <Container maxWidth="lg" sx={{ py: 8, flex: 1 }}>
+        <Products />
+      </Container>
+    </Box>
   );
 }
-
-export default Home;
