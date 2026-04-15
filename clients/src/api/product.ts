@@ -21,3 +21,13 @@ export const getProducts = async (): Promise<Product[]> => {
     throw error;
   }
 };
+
+export const getProductById = async (id: string): Promise<Product> => {
+  try {
+    const response = await api.get(`/products/${id}`);
+    return response.data.data as Product;
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    throw error;
+  }
+};
