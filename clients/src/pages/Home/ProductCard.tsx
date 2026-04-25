@@ -1,14 +1,12 @@
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Typography,
-} from "@mui/material";
+import { Box, Card, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { LocalFireDepartment, Star } from "@mui/icons-material";
+import { ShoppingCart, FavoriteBorder, Favorite, Star } from "@mui/icons-material";
+import { useEffect, useState } from "react";
 import { type Product } from "../../api/product";
+import { addToCart } from "../../api/cart";
+import { getAuthUser } from "../../utils/auth";
+import { notify } from "../../utils/notify";
+import { isProductWishlisted, toggleWishlistProduct } from "../../utils/wishlist";
 
 interface ProductCardProps {
   product: Product;
@@ -16,63 +14,67 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, formatPrice }: ProductCardProps) {
+  const [wishlisted, setWishlisted] = useState(false);
+
+  useEffect(() => {
+    const syncWishlist = () => {
+      setWishlisted(isProductWishlisted(product._id));
+    };
+
+    syncWishlist();
+    window.addEventListener("wishlist-updated", syncWishlist);
+    window.addEventListener("storage", syncWishlist);
+
+    return () => {
+      window.removeEventListener("wishlist-updated", syncWishlist);
+      window.removeEventListener("storage", syncWishlist);
+    };
+  }, [product._id]);
+
   const hasDiscount = product.discount > 0;
   const imageUrl =
     product.mainImage?.url ||
     "https://via.placeholder.com/600x450?text=Product";
   const finalPrice = hasDiscount ? product.finalPrice : product.price;
-  const savedAmount = Math.max(product.price - finalPrice, 0);
 
   return (
     <Card
       sx={{
         borderRadius: 5,
-        backgroundColor: "#fff",
-        border: "1px solid #f0f0f5",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
+        bgcolor: "var(--bg-surface)",
+        boxShadow: "0 8px 24px rgba(19, 35, 40, 0.06)",
+        border: "1px solid var(--border-soft)",
         overflow: "hidden",
         height: "100%",
-        transition: "all 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+        transition: "all 0.3s",
         "&:hover": {
-          transform: "translateY(-10px)",
-          boxShadow: "0 20px 40px rgba(99, 102, 241, 0.15)",
-          borderColor: "#6366f1",
-          "& .product-image": {
-            transform: "scale(1.08)",
+          boxShadow: "0 20px 42px rgba(19, 35, 40, 0.14)",
+          transform: "translateY(-5px)",
+          "& .card-image": {
+            transform: "scale(1.06)",
+          },
+          "& .card-actions": {
+            opacity: 1,
           },
         },
       }}
-    >
-      <CardActionArea
-        component={Link}
-        to={`/product/${product._id}`}
-        sx={{
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "stretch",
-        }}
       >
-        <Box
-          sx={{
-            position: "relative",
-            backgroundColor: "#fafafa",
-            pt: "75%",
-          }}
-        >
-          <CardMedia
+      <Link to={`/product/${product._id}`} style={{ textDecoration: "none", color: "inherit", display: "flex", flexDirection: "column", height: "100%" }}>
+        <Box sx={{ position: "relative", bgcolor: "#f5f9f8", pt: "80%", overflow: "hidden" }}>
+          <Box
             component="img"
-            image={imageUrl}
+            src={imageUrl}
             alt={product.name}
-            className="product-image"
+            className="card-image"
             sx={{
               position: "absolute",
-              inset: 0,
+              top: 0,
+              left: 0,
               width: "100%",
               height: "100%",
               objectFit: "contain",
-              p: 3,
-              transition: "transform 400ms ease",
+              p: 2,
+              transition: "transform 0.4s",
             }}
           />
 
@@ -82,137 +84,137 @@ export default function ProductCard({ product, formatPrice }: ProductCardProps) 
                 position: "absolute",
                 top: 12,
                 left: 12,
-                bgcolor: "#ef4444",
+                bgcolor: "var(--accent)",
                 color: "#fff",
                 px: 1.5,
-                py: 0.75,
-                borderRadius: 2,
-                display: "flex",
-                alignItems: "center",
-                boxShadow: "0 4px 12px rgba(239, 68, 68, 0.4)",
+                py: 0.5,
+                borderRadius: 1.5,
+                fontWeight: 700,
+                fontSize: 12,
               }}
             >
-              <Typography sx={{ fontWeight: 800, fontSize: 14 }}>
-                -{product.discount}%
-              </Typography>
+              -{product.discount}%
             </Box>
           )}
 
           <Box
+            className="card-actions"
             sx={{
               position: "absolute",
-              top: 12,
+              bottom: 12,
               right: 12,
               display: "flex",
-              gap: 0.5,
+              gap: 1,
+              opacity: 0,
+              transition: "opacity 0.3s",
             }}
           >
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                sx={{
-                  fontSize: 16,
-                  color: star <= 4 ? "#fbbf24" : "#e5e7eb",
-                }}
-              />
-            ))}
+            <Button
+              onClick={async (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+
+                if (!getAuthUser()) {
+                  notify("Please login to add items to cart.", "warning");
+                  return;
+                }
+
+                try {
+                  await addToCart(product._id, 1);
+                  notify("Added to cart", "success");
+                } catch {
+                  notify("Could not add this item to cart.", "error");
+                }
+              }}
+              disabled={product.stock === 0}
+              sx={{
+                minWidth: 40,
+                height: 40,
+                borderRadius: 2,
+                bgcolor: "var(--bg-surface)",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
+                color: "var(--text-muted)",
+                "&:hover": { bgcolor: "var(--brand-soft)", color: "var(--brand)" },
+              }}
+            >
+              <ShoppingCart sx={{ fontSize: 20 }} />
+            </Button>
+            <Button
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                setWishlisted(toggleWishlistProduct(product._id));
+              }}
+              sx={{
+                minWidth: 40,
+                height: 40,
+                borderRadius: 2,
+                bgcolor: "var(--bg-surface)",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
+                color: wishlisted ? "#dc2626" : "var(--text-muted)",
+                "&:hover": { bgcolor: "#ffecee", color: "#dc2626" },
+              }}
+            >
+              {wishlisted ? (
+                <Favorite sx={{ fontSize: 20 }} />
+              ) : (
+                <FavoriteBorder sx={{ fontSize: 20 }} />
+              )}
+            </Button>
           </Box>
         </Box>
 
-        <CardContent sx={{ p: 3, pt: 2.5 }}>
+        <Box sx={{ p: 2.5, flexGrow: 1, display: "flex", flexDirection: "column" }}>
+          <Box sx={{ display: "flex", gap: 0.5, mb: 1 }}>
+            {[1,2,3,4,5].map((s) => (
+              <Star key={s} sx={{ fontSize: 14, color: s <= 4 ? "#fbbf24" : "#e5e7eb" }} />
+            ))}
+          </Box>
+
           <Typography
-            variant="h6"
             sx={{
-              fontWeight: 600,
+              fontWeight: 700,
               fontSize: 15,
-              lineHeight: 1.4,
-              color: "#1f2937",
+              color: "var(--text-main)",
               mb: 1.5,
               display: "-webkit-box",
               WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
+              lineHeight: 1.4,
               minHeight: 42,
             }}
           >
             {product.name}
           </Typography>
 
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "baseline",
-              gap: 1.5,
-              mb: 1.5,
-            }}
-          >
-            <Typography
-              sx={{
-                fontWeight: 800,
-                fontSize: 24,
-                color: hasDiscount ? "#ef4444" : "#1f2937",
-              }}
-            >
-              {formatPrice(finalPrice)}
-            </Typography>
-
-            {hasDiscount && (
+          <Box sx={{ mt: "auto" }}>
+            <Box sx={{ display: "flex", alignItems: "baseline", gap: 1.5, mb: 1 }}>
               <Typography
                 sx={{
-                  fontSize: 14,
-                  color: "#9ca3af",
-                  textDecoration: "line-through",
-                  fontWeight: 500,
+                  fontWeight: 800,
+                  fontSize: 21,
+                  color: hasDiscount ? "var(--accent)" : "var(--text-main)",
+                  fontFamily: "Sora, sans-serif",
                 }}
               >
-                {formatPrice(product.price)}
+                {formatPrice(finalPrice)}
               </Typography>
-            )}
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 0.5,
-                color: hasDiscount ? "#ef4444" : "#9ca3af",
-                fontSize: 13,
-                fontWeight: 500,
-              }}
-            >
               {hasDiscount && (
-                <>
-                  <LocalFireDepartment sx={{ fontSize: 16 }} />
-                  <span>Hot Deal</span>
-                </>
+                <Typography sx={{ fontSize: 14, color: "var(--text-muted)", textDecoration: "line-through" }}>
+                  {formatPrice(product.price)}
+                </Typography>
               )}
             </Box>
 
-            {hasDiscount && (
-              <Box
-                sx={{
-                  bgcolor: "#fef2f2",
-                  color: "#ef4444",
-                  px: 1.5,
-                  py: 0.5,
-                  borderRadius: 1.5,
-                  fontSize: 12,
-                  fontWeight: 600,
-                }}
-              >
-                Save {formatPrice(savedAmount)}
-              </Box>
+            {product.stock === 0 && (
+              <Typography sx={{ color: "#dc2626", fontWeight: 700, fontSize: 13 }}>
+                Out of stock
+              </Typography>
             )}
           </Box>
-        </CardContent>
-      </CardActionArea>
+        </Box>
+      </Link>
     </Card>
   );
 }

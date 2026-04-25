@@ -47,9 +47,23 @@ export const createProduct = async (data, files) => {
 };
 
 export const getAllProducts = async (page, limit, skip) => {
-  const products = await productData.getAll(limit, skip);
+  const shouldPaginate =
+    typeof page === "number" &&
+    typeof limit === "number" &&
+    typeof skip === "number";
+
+  const effectiveLimit = shouldPaginate ? limit : 0;
+  const effectiveSkip = shouldPaginate ? skip : 0;
+
+  const products = await productData.getAll(effectiveLimit, effectiveSkip);
   if (products.count === 0) {
     throw new AppError("No products found", 404);
+  }
+
+  if (!shouldPaginate) {
+    return {
+      data: products.result,
+    };
   }
 
   return {

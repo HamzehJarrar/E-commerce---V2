@@ -8,6 +8,7 @@ export interface Product {
   discount: number;
   finalPrice: number;
   stock: number;
+  category?: { name: string } | string;
   mainImage: { url: string; public_id: string }; 
   subImages: { url: string; public_id: string }[];
 }

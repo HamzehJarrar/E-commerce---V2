@@ -6,8 +6,9 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { getProducts, type Product } from "../../api/product";
+import { formatPrice } from "../../utils/formatPrice";
 import HeroSection from "./HeroSection";
 import ProductCard from "./ProductCard";
 import SectionHeader from "./SectionHeader";
@@ -31,33 +32,22 @@ export default function Home() {
     fetchProducts();
   }, []);
 
-  const discountedProducts = useMemo(
-    () => products.filter((product) => product.discount > 0),
-    [products],
-  );
+  const discountedProducts = products.filter((product) => product.discount > 0);
+  const regularProducts = products.filter((product) => product.discount <= 0);
 
-  const regularProducts = useMemo(
-    () => products.filter((product) => product.discount <= 0),
-    [products],
-  );
-
-  const topDiscount = useMemo(() => {
-    return [...discountedProducts].sort((a, b) => b.discount - a.discount)[0];
-  }, [discountedProducts]);
-
-  const formatPrice = (value: number) =>
-    new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "ILS",
-      maximumFractionDigits: 0,
-    }).format(Number(value));
+  let topDiscount: Product | undefined;
+  discountedProducts.forEach((product) => {
+    if (!topDiscount || product.discount > topDiscount.discount) {
+      topDiscount = product;
+    }
+  });
 
   if (loading) {
     return (
       <Box
         sx={{
           minHeight: "100vh",
-          bgcolor: "#0f172a",
+          bgcolor: "var(--bg-main)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -67,7 +57,7 @@ export default function Home() {
           <Box sx={{ position: "relative" }}>
             <CircularProgress
               size={60}
-              sx={{ color: "#6366f1" }}
+              sx={{ color: "var(--brand)" }}
               thickness={4}
             />
             <Box
@@ -83,7 +73,7 @@ export default function Home() {
                   width: 10,
                   height: 10,
                   borderRadius: "50%",
-                  bgcolor: "#fff",
+                  bgcolor: "var(--brand)",
                   animation: "pulse 1.5s ease-in-out infinite",
                   "@keyframes pulse": {
                     "0%, 100%": { opacity: 1 },
@@ -95,12 +85,12 @@ export default function Home() {
           </Box>
           <Typography
             sx={{
-              color: "#fff",
-              fontWeight: 500,
+              color: "var(--text-muted)",
+              fontWeight: 600,
               fontSize: 16,
             }}
           >
-            Loading amazing deals...
+            Loading products...
           </Typography>
         </Stack>
       </Box>
@@ -108,16 +98,16 @@ export default function Home() {
   }
 
   return (
-    <Box sx={{ bgcolor: "#f8fafc", minHeight: "100vh" }}>
+    <Box sx={{ minHeight: "100vh" }}>
       <HeroSection topDiscount={topDiscount} formatPrice={formatPrice} />
 
       {discountedProducts.length > 0 && (
-        <Container maxWidth="xl" sx={{ py: 8 }}>
+        <Container maxWidth="xl" sx={{ py: 7 }}>
           <SectionHeader
             title="Hot Deals"
-            subtitle="Limited time offers - grab them before they are gone!"
-            accentColor="#ef4444"
-            icon={<span style={{ fontSize: 24 }}>🔥</span>}
+            subtitle="Best discounts selected for you today."
+            accentColor="var(--accent)"
+            icon={<span style={{ fontSize: 22 }}>%</span>}
           />
           <Grid container spacing={4}>
             {discountedProducts.map((product) => (
@@ -130,11 +120,11 @@ export default function Home() {
       )}
 
       {regularProducts.length > 0 && (
-        <Container maxWidth="xl" sx={{ pb: 10 }}>
+        <Container maxWidth="xl" sx={{ pb: 9 }}>
           <SectionHeader
             title="All Products"
-            subtitle="Browse our complete collection of products."
-            accentColor="#1e1b4b"
+            subtitle="Simple browsing with clear prices and stock info."
+            accentColor="var(--brand)"
           />
           <Grid container spacing={4}>
             {regularProducts.map((product) => (
@@ -148,7 +138,7 @@ export default function Home() {
 
       {discountedProducts.length === 0 && regularProducts.length === 0 && (
         <Container maxWidth="lg" sx={{ py: 10, textAlign: "center" }}>
-          <Typography sx={{ color: "#6b7280", fontSize: 18 }}>
+          <Typography sx={{ color: "var(--text-muted)", fontSize: 18 }}>
             No products available at the moment.
           </Typography>
         </Container>

@@ -5,11 +5,17 @@ import productModel from "../../../database/models/product.model.js";
   };
 
 export const getAll = async (limit, skip) => {
-  const products = await productModel
-    .find()
-    .populate("category", "name -_id")
-    .skip(skip)
-    .limit(limit);
+  const query = productModel.find().populate("category", "name -_id");
+
+  if (typeof skip === "number" && skip > 0) {
+    query.skip(skip);
+  }
+
+  if (typeof limit === "number" && limit > 0) {
+    query.limit(limit);
+  }
+
+  const products = await query;
   const count = await productModel.countDocuments();
 
   return {

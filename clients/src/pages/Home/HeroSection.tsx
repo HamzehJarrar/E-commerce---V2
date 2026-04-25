@@ -7,7 +7,13 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { ArrowForward, Percent, ShoppingBag, Bolt, Verified } from "@mui/icons-material";
+import {
+  ArrowForward,
+  Percent,
+  ShoppingBag,
+  LocalShipping,
+  WorkspacePremium,
+} from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { type Product } from "../../api/product";
 
@@ -23,64 +29,57 @@ export default function HeroSection({
   return (
     <Box
       sx={{
-        background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)",
+        background:
+          "linear-gradient(130deg, #f0f7f5 0%, #f6f4ef 45%, #fff6ec 100%)",
         position: "relative",
         overflow: "hidden",
-       "&::before": {
+        borderBottom: "1px solid var(--border-soft)",
+        "&::before": {
           content: '""',
           position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: `
-            radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.1) 0%, transparent 40%)
-          `,
+          top: -120,
+          right: -80,
+          width: 300,
+          height: 300,
+          borderRadius: "50%",
+          background: "rgba(15, 118, 110, 0.1)",
+          filter: "blur(6px)",
         },
         "&::after": {
           content: '""',
           position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: `
-            repeating-linear-gradient(
-              0deg,
-              transparent,
-              transparent 50px,
-              rgba(255, 255, 255, 0.01) 50px,
-              rgba(255, 255, 255, 0.01) 51px
-            ),
-            repeating-linear-gradient(
-              90deg,
-              transparent,
-              transparent 50px,
-              rgba(255, 255, 255, 0.01) 50px,
-              rgba(255, 255, 255, 0.01) 51px
-            )
-          `,
+          bottom: -140,
+          left: -100,
+          width: 320,
+          height: 320,
+          borderRadius: "50%",
+          background: "rgba(249, 115, 22, 0.12)",
+          filter: "blur(8px)",
         },
       }}
     >
       <Box
         sx={{
-          py: { xs: 8, md: 12 },
-          px: { xs: 4, md: 10 },
+          py: { xs: 7, md: 9 },
+          px: { xs: 2.5, md: 6 },
+          maxWidth: 1280,
+          mx: "auto",
           position: "relative",
           zIndex: 1,
         }}
       >
-        <Grid container spacing={6} alignItems="center">
+        <Grid
+          container
+          spacing={{ xs: 4, md: 6 }}
+          sx={{ alignItems: "center" }}
+        >
           <Grid size={{ xs: 12, lg: 7 }}>
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
-                gap: 2,
-                mb: 3,
+                gap: 1.25,
+                mb: 2.5,
                 flexWrap: "wrap",
               }}
             >
@@ -88,34 +87,40 @@ export default function HeroSection({
                 sx={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: 1,
-                  bgcolor: "rgba(99, 102, 241, 0.15)",
-                  border: "1px solid rgba(99, 102, 241, 0.3)",
-                  px: 2.5,
-                  py: 1,
-                  borderRadius: 3,
+                  gap: 0.75,
+                  bgcolor: "var(--brand-soft)",
+                  border: "1px solid #b9ddd9",
+                  px: 1.75,
+                  py: 0.65,
+                  borderRadius: 99,
                 }}
               >
-                <Bolt sx={{ fontSize: 18, color: "#818cf8" }} />
-                <Typography sx={{ color: "#a5b4fc", fontSize: 13, fontWeight: 600 }}>
-                  Flash Deals Every Day
+                <WorkspacePremium
+                  sx={{ fontSize: 16, color: "var(--brand)" }}
+                />
+                <Typography
+                  sx={{ color: "var(--brand)", fontSize: 13, fontWeight: 700 }}
+                >
+                  Trusted quality picks
                 </Typography>
               </Box>
               <Box
                 sx={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: 1,
-                  bgcolor: "rgba(34, 197, 94, 0.15)",
-                  border: "1px solid rgba(34, 197, 94, 0.3)",
-                  px: 2.5,
-                  py: 1,
-                  borderRadius: 3,
+                  gap: 0.75,
+                  bgcolor: "var(--accent-soft)",
+                  border: "1px solid #ffd2b0",
+                  px: 1.75,
+                  py: 0.65,
+                  borderRadius: 99,
                 }}
               >
-                <Verified sx={{ fontSize: 18, color: "#22c55e" }} />
-                <Typography sx={{ color: "#22c55e", fontSize: 13, fontWeight: 600 }}>
-                  100% Original
+                <LocalShipping sx={{ fontSize: 16, color: "var(--accent)" }} />
+                <Typography
+                  sx={{ color: "#b45309", fontSize: 13, fontWeight: 700 }}
+                >
+                  Fast delivery support
                 </Typography>
               </Box>
             </Box>
@@ -123,74 +128,60 @@ export default function HeroSection({
             <Typography
               variant="h1"
               sx={{
-                fontSize: { xs: 38, md: 56, lg: 60 },
-                fontWeight: 900,
-                color: "#fff",
-                lineHeight: 1.1,
-                mb: 3,
+                fontSize: { xs: 34, sm: 42, md: 56 },
+                fontWeight: 800,
+                color: "var(--text-main)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.03em",
+                mb: 2.5,
+                fontFamily: "Sora, sans-serif",
               }}
             >
-              Discover
-              <br />
+              Fresh finds for
               <Box
                 component="span"
-                sx={{
-                  background: "linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #f472b6 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
+                sx={{ color: "var(--brand)", display: "block" }}
               >
-                Premium Products
-              </Box>
-              <br />
-              <Box
-                component="span"
-                sx={{
-                  background: "linear-gradient(135deg, #22c55e 0%, #34d399 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                At Unbeatable Prices
+                everyday shopping
               </Box>
             </Typography>
 
             <Typography
               sx={{
-                color: "rgba(255, 255, 255, 0.6)",
-                fontSize: { xs: 16, md: 18 },
-                mb: 4,
-                maxWidth: 520,
+                color: "var(--text-muted)",
+                fontSize: { xs: 15, md: 18 },
+                mb: 3.5,
+                maxWidth: 560,
                 lineHeight: 1.7,
               }}
             >
-              Shop the hottest deals on premium products. Unbeatable prices on
-              everything you love, with fast delivery and easy returns.
+              Explore curated products, clearer prices, and easier browsing. We
+              redesigned everything to help you find what you need faster.
             </Typography>
 
-            <Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
+            <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap", mb: 3 }}>
               <Button
                 variant="contained"
                 size="large"
+                component={Link}
+                to="/products"
                 endIcon={<ArrowForward />}
                 sx={{
-                  bgcolor: "#6366f1",
+                  bgcolor: "var(--brand)",
                   color: "#fff",
                   fontWeight: 700,
-                  px: 5,
-                  py: 1.75,
+                  px: 3.5,
+                  py: 1.4,
                   borderRadius: 3,
-                  boxShadow: "0 8px 24px rgba(99, 102, 241, 0.4)",
-                  fontSize: 16,
+                  textTransform: "none",
+                  boxShadow: "0 12px 28px rgba(15, 118, 110, 0.28)",
                   "&:hover": {
-                    bgcolor: "#4f46e5",
-                    transform: "translateY(-3px)",
-                    boxShadow: "0 12px 32px rgba(99, 102, 241, 0.5)",
+                    bgcolor: "#0b5f59",
+                    transform: "translateY(-2px)",
                   },
-                  transition: "all 200ms ease",
                 }}
               >
-                Shop Now
+                Start Shopping
               </Button>
               <Button
                 variant="outlined"
@@ -199,66 +190,68 @@ export default function HeroSection({
                 component={Link}
                 to="/products"
                 sx={{
-                  borderColor: "rgba(255, 255, 255, 0.2)",
-                  color: "#fff",
+                  borderColor: "#cbd7da",
+                  color: "var(--text-main)",
                   fontWeight: 600,
-                  px: 5,
-                  py: 1.75,
+                  px: 3,
+                  py: 1.4,
                   borderRadius: 3,
-                  fontSize: 16,
+                  textTransform: "none",
                   "&:hover": {
-                    borderColor: "#fff",
-                    bgcolor: "rgba(255, 255, 255, 0.08)",
+                    borderColor: "var(--brand)",
+                    bgcolor: "var(--bg-surface)",
                   },
                 }}
               >
-                Browse All
+                Browse Catalog
               </Button>
+            </Box>
+
+            <Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
+              <Typography sx={{ color: "var(--text-muted)", fontSize: 14 }}>
+                7-day return policy
+              </Typography>
+              <Typography sx={{ color: "var(--text-muted)", fontSize: 14 }}>
+                Secure checkout
+              </Typography>
+              <Typography sx={{ color: "var(--text-muted)", fontSize: 14 }}>
+                Live stock updates
+              </Typography>
             </Box>
           </Grid>
 
           <Grid size={{ xs: 12, lg: 5 }}>
-            <Box
-              sx={{
-                display: { xs: "none", lg: "block" },
-                position: "relative",
-              }}
-            >
-              {topDiscount && (
+            {topDiscount && (
+              <Link
+                to={`/product/${topDiscount._id}`}
+                style={{ textDecoration: "none" }}
+              >
                 <Box
                   sx={{
-                    position: "relative",
-                    animation: "float 6s ease-in-out infinite",
-                    "@keyframes float": {
-                      "0%, 100%": { transform: "translateY(0)" },
-                      "50%": { transform: "translateY(-20px)" },
+                    maxWidth: 370,
+                    mx: "auto",
+                    animation: "floatCard 6s ease-in-out infinite",
+                    "@keyframes floatCard": {
+                      "0%,100%": { transform: "translateY(0px)" },
+                      "50%": { transform: "translateY(-8px)" },
                     },
                   }}
                 >
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: -20,
-                      left: -20,
-                      width: 120,
-                      height: 120,
-                      borderRadius: "50%",
-                      background: "linear-gradient(135deg, #6366f1 0%, #a78bfa 100%)",
-                      filter: "blur(40px)",
-                      opacity: 0.4,
-                    }}
-                  />
                   <Card
                     sx={{
-                      maxWidth: 340,
-                      mx: "auto",
-                      borderRadius: 5,
+                      borderRadius: 6,
                       overflow: "hidden",
-                      boxShadow: "0 25px 80px rgba(0, 0, 0, 0.5)",
-                      border: "1px solid rgba(255, 255, 255, 0.1)",
+                      border: "1px solid #d7e2e4",
+                      boxShadow: "0 26px 54px rgba(19, 35, 40, 0.15)",
                     }}
                   >
-                    <Box sx={{ position: "relative", pt: "70%" }}>
+                    <Box
+                      sx={{
+                        position: "relative",
+                        pt: "73%",
+                        bgcolor: "#f9fbfa",
+                      }}
+                    >
                       <CardMedia
                         component="img"
                         image={
@@ -271,38 +264,37 @@ export default function HeroSection({
                           width: "100%",
                           height: "100%",
                           objectFit: "contain",
-                          p: 4,
+                          p: 3,
                         }}
                       />
                       <Box
                         sx={{
                           position: "absolute",
-                          top: 16,
-                          left: 16,
-                          bgcolor: "#ef4444",
+                          top: 14,
+                          left: 14,
+                          bgcolor: "var(--accent)",
                           color: "#fff",
-                          px: 2,
-                          py: 1,
+                          px: 1.6,
+                          py: 0.8,
                           borderRadius: 2,
                           fontWeight: 800,
-                          fontSize: 22,
+                          fontSize: 15,
                           display: "flex",
                           alignItems: "center",
                           gap: 0.5,
-                          boxShadow: "0 4px 16px rgba(239, 68, 68, 0.5)",
                         }}
                       >
-                        <Percent sx={{ fontSize: 18 }} />
-                        {topDiscount.discount}% Off
+                        <Percent sx={{ fontSize: 16 }} />
+                        {topDiscount.discount}% OFF
                       </Box>
                     </Box>
-                    <CardContent sx={{ p: 3, bgcolor: "#fff" }}>
+                    <CardContent sx={{ p: 2.5, bgcolor: "var(--bg-surface)" }}>
                       <Typography
                         sx={{
-                          fontWeight: 600,
-                          fontSize: 17,
-                          color: "#1f2937",
-                          mb: 1.5,
+                          fontWeight: 700,
+                          fontSize: 18,
+                          color: "var(--text-main)",
+                          mb: 1,
                           display: "-webkit-box",
                           WebkitLineClamp: 1,
                           WebkitBoxOrient: "vertical",
@@ -312,17 +304,25 @@ export default function HeroSection({
                         {topDiscount.name}
                       </Typography>
                       <Box
-                        sx={{ display: "flex", alignItems: "baseline", gap: 1.5 }}
+                        sx={{
+                          display: "flex",
+                          alignItems: "baseline",
+                          gap: 1.2,
+                        }}
                       >
                         <Typography
-                          sx={{ fontWeight: 800, fontSize: 28, color: "#ef4444" }}
+                          sx={{
+                            fontWeight: 800,
+                            fontSize: 26,
+                            color: "var(--brand)",
+                          }}
                         >
                           {formatPrice(topDiscount.finalPrice)}
                         </Typography>
                         <Typography
                           sx={{
-                            fontSize: 16,
-                            color: "#9ca3af",
+                            fontSize: 15,
+                            color: "var(--text-muted)",
                             textDecoration: "line-through",
                           }}
                         >
@@ -332,8 +332,8 @@ export default function HeroSection({
                     </CardContent>
                   </Card>
                 </Box>
-              )}
-            </Box>
+              </Link>
+            )}
           </Grid>
         </Grid>
       </Box>

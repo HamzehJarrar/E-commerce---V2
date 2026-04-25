@@ -12,8 +12,18 @@ export const createProduct = async (req, res, next) => {
 };
 
 export const getAllProducts = async (req, res, next) => {
-  const { page, limit, skip } = getPagination(req);
-  const productsData = await productService.getAllProducts(page, limit, skip);
+  const hasPaginationParams =
+    typeof req.query.page !== "undefined" ||
+    typeof req.query.limit !== "undefined";
+
+  let productsData;
+
+  if (hasPaginationParams) {
+    const { page, limit, skip } = getPagination(req);
+    productsData = await productService.getAllProducts(page, limit, skip);
+  } else {
+    productsData = await productService.getAllProducts();
+  }
 
   res.status(200).json({
     message: "Products retrieved successfully",

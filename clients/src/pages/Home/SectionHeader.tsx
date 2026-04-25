@@ -10,13 +10,13 @@ interface SectionHeaderProps {
 export default function SectionHeader({
   title,
   subtitle,
-  accentColor = "#1a1a2e",
+  accentColor = "var(--brand)",
   icon,
 }: SectionHeaderProps) {
   return (
     <Box
       sx={{
-        mb: 5,
+        mb: 4,
         position: "relative",
       }}
     >
@@ -30,18 +30,20 @@ export default function SectionHeader({
       >
         <Box
           sx={{
-            width: 8,
-            height: 36,
-            bgcolor: accentColor,
-            borderRadius: 2,
+            width: 42,
+            height: 8,
+            background: `linear-gradient(90deg, ${accentColor} 0%, #16a085 100%)`,
+            borderRadius: 99,
           }}
         />
         <Typography
           variant="h3"
           sx={{
-            fontWeight: 800,
-            color: "#1a1a2e",
-            fontSize: { xs: 24, md: 32 },
+            fontWeight: 700,
+            color: "var(--text-main)",
+            fontSize: { xs: 24, md: 30 },
+            fontFamily: "Sora, sans-serif",
+            letterSpacing: "-0.02em",
           }}
         >
           {title}
@@ -51,8 +53,8 @@ export default function SectionHeader({
       {subtitle && (
         <Typography
           sx={{
-            color: "#6b7280",
-            ml: 3,
+            color: "var(--text-muted)",
+            ml: 7,
             fontSize: { xs: 14, md: 16 },
           }}
         >
